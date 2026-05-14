@@ -2,7 +2,7 @@
 from flask import  Blueprint, request, jsonify
 # from flask import blueprints
 
-from controllers.controller import add_lemmbrete
+from controllers.controller import add_lemmbrete, pegar_lembretes
 
 
 main = Blueprint('main', __name__)
@@ -19,3 +19,9 @@ def criar_lembrete():
         add_lemmbrete(lembrete)
         return jsonify({"message": "Lembrete criado com sucesso!"}), 201
     return jsonify({"error": "Dados incompletos"}), 400
+
+
+@main.route("/lembrete", methods=["GET"])
+def lembretes():
+    return pegar_lembretes()
+    
