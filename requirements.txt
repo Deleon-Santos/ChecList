@@ -1,2 +1,5 @@
 Flask
 SQLAlchemy
+flask-jwt-extended
+flask-cors
+passlib[bcrypt]
