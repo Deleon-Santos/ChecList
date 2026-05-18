@@ -1,8 +1,34 @@
 from flask import jsonify
+from flask_jwt_extended import create_access_token
+from bcrypt import checkpw
+from config import Session
 
-from config import Session, Base
-from model.models import Lembrete
+from model.models import Lembrete, User
 
+
+def logar(email, senha):
+   
+    with Session() as session:
+        try:
+            user = session.query(User).filter_by(email=email).first()
+            if not user:
+                return jsonify({"error": "Credenciais inválidas."}), 401
+
+            password_matches = checkpw(senha.encode('utf-8'), user.senha.encode('utf-8'))
+            if not password_matches:
+                return jsonify({"error": "Credenciais inválidas."}), 401
+
+            token = create_access_token(identity=user.id_user)
+            return jsonify({
+                "status": "ok",
+                "user_id": user.id_user,
+                "access_token": "Bearer " + token,
+                "token_type": "Bearer"
+            }), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": f"Erro ao realizar login: {str(e)}"}), 500
+        
 def add_lemmbrete(lembrete):
     with Session() as session:
         try:
@@ -15,9 +41,10 @@ def add_lemmbrete(lembrete):
             )
             session.add(new_lembrete)
             session.commit()
+            return jsonify({"message": "Lembrete criado com sucesso!"}), 201
         except Exception as e:
             session.rollback()
-            
+            return jsonify({"error": f"Erro ao criar lembrete: {str(e)}"}), 500
 
 def pegar_lembretes():
     with Session() as session:
