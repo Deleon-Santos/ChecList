@@ -88,3 +88,81 @@ def pegar_lembretes():
             return jsonify({"error": "Erro interno do servidor."}), 500
 
 
+def pegar_lembrete_id(id_lembrete):
+    with Session() as session:
+        try: 
+            lembrete = session.query(Lembrete).filter_by(id_lembrete=id_lembrete).first()
+            if not lembrete:
+                return jsonify({"message": "Lembrete não encontrado."}), 404
+            
+            return jsonify({
+                                "id": lembrete.id_lembrete,
+                                "titulo": lembrete.titulo,
+                                "descricao": lembrete.descricao,
+                                "data_hora": lembrete.data_hora,
+                                "status": lembrete.status,
+                                "user": lembrete.user
+                             }), 200
+        
+        except Exception:
+            session.rollback()
+            logger.exception("Erro ao pegar lembrete por ID")
+            return jsonify({"error": "Erro interno do servidor."}), 500
+        
+
+def pegar_lembrete_id(id_lembrete):
+    with Session() as session:
+        try: 
+            lembrete = session.query(Lembrete).filter_by(id_lembrete=id_lembrete).first()
+            if not lembrete:
+                return jsonify({"message": "Lembrete não encontrado."}), 404
+            
+            return jsonify({
+                                "id": lembrete.id_lembrete,
+                                "titulo": lembrete.titulo,
+                                "descricao": lembrete.descricao,
+                                "data_hora": lembrete.data_hora,
+                                "status": lembrete.status,
+                                "user": lembrete.user
+                             }), 200
+        
+        except Exception:
+            session.rollback()
+            logger.exception("Erro ao pegar lembrete por ID")
+            return jsonify({"error": "Erro interno do servidor."}), 500
+
+
+def deletar_lembrete_id(id_lembrete):
+    with Session() as session:
+        try: 
+            lembrete = session.query(Lembrete).filter_by(id_lembrete=id_lembrete).first()
+            if not lembrete:
+                return jsonify({"message": "Lembrete não encontrado."}), 404
+            
+            session.delete(lembrete)
+            session.commit()
+            return jsonify({"message": "Lembrete deletado com sucesso!"}), 200
+        
+        except Exception:
+            session.rollback()
+            logger.exception("Erro ao deletar lembrete por ID")
+            return jsonify({"error": "Erro interno do servidor."}), 500
+        
+
+def atualizar_lembrete_id(id_lembrete, titulo, descricao, status):
+    with Session() as session:
+        try: 
+            lembrete = session.query(Lembrete).filter_by(id_lembrete=id_lembrete).first()
+            if not lembrete:
+                return jsonify({"message": "Lembrete não encontrado."}), 404
+            
+            lembrete.titulo = titulo
+            lembrete.descricao = descricao
+            lembrete.status = status
+            session.commit()
+            return jsonify({"message": "Lembrete atualizado com sucesso!"}), 200
+        
+        except Exception:
+            session.rollback()
+            logger.exception("Erro ao atualizar lembrete por ID")
+            return jsonify({"error": "Erro interno do servidor."}), 500

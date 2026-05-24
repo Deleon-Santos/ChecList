@@ -1,9 +1,8 @@
 
 from flask import  Blueprint, request, jsonify
-# from flask import blueprints
-
-from controllers.controller import add_lemmbrete, logar, novo_user, pegar_lembretes
-
+from flask_jwt_extended import get_jwt_identity,jwt_required
+from controllers.controller import add_lemmbrete, atualizar_lembrete_id, deletar_lembrete_id, logar, novo_user, pegar_lembrete_id, pegar_lembretes
+from model.models import User, Lembrete
 
 main = Blueprint('main', __name__)
 
@@ -30,16 +29,56 @@ def login():
 
 
 @main.route("/lembrete", methods=["POST"])
+@jwt_required()
 def criar_lembrete():
+    user = get_jwt_identity()
+    if not user:
+        return jsonify({"error": "Usuário não autenticado."}), 401
     lembrete = request.get_json() or {}
-    if lembrete.get("titulo") and lembrete.get("descricao") and lembrete.get("user") and lembrete.get("status"):
-        
+    
+    if lembrete.get("titulo") and lembrete.get("descricao") and lembrete.get("user") and lembrete.get("status"): 
         return add_lemmbrete(lembrete.get("titulo"), lembrete.get("descricao"),lembrete.get("user"),lembrete.get("status"))
-        #return jsonify({"message": "Lembrete criado com sucesso!"}), 201
     return jsonify({"error": "Dados incompletos"}), 400
 
 
 @main.route("/lembrete", methods=["GET"])
+@jwt_required()
 def lembretes():
+    user = get_jwt_identity()
+    if not user:
+        return jsonify({"error": "Usuário não autenticado."}), 401
     return pegar_lembretes()
     
+
+@main.route("/lembrete_id/<int:id_lembrete>", methods=["GET"])
+@jwt_required()
+def lembrete_id(id_lembrete):
+    user = get_jwt_identity()
+    if not user:
+        return jsonify({"error": "Usuário não autenticado."}), 401
+    if id_lembrete:
+        return pegar_lembrete_id(id_lembrete)
+    return jsonify({"error": "ID do lembrete é necessário"}), 400
+
+
+@main.route("/deleta_id/<int:id_lembrete>", methods=["DELETE"])
+@jwt_required()
+def deletar_lembrete(id_lembrete):
+    user = get_jwt_identity()
+    if not user:
+        return jsonify({"error": "Usuário não autenticado."}), 401
+    if id_lembrete:
+        return deletar_lembrete_id(id_lembrete)
+    return jsonify({"error": "ID do lembrete é necessário"}), 400
+
+
+@main.route("/atualiza_id/<int:id_lembrete>", methods=["PUT"])
+@jwt_required()
+def atualiza_lembrete(id_lembrete):
+    user = get_jwt_identity()
+    if not user:
+        return jsonify({"error": "Usuário não autenticado."}), 401
+    lembrete = request.get_json() or {}
+    if id_lembrete and lembrete.get("titulo") and lembrete.get("descricao") and lembrete.get("status"):
+        return atualizar_lembrete_id(id_lembrete, lembrete.get("titulo"), lembrete.get("descricao"), lembrete.get("status"))
+    return jsonify({"error": "Dados incompletos"}), 400
