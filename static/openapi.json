@@ -1,0 +1,290 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Checklist API",
+    "version": "1.0.0",
+    "description": "Documentação da API Checklist com autenticação JWT e endpoints para usuários e lembretes."
+  },
+  "servers": [
+    {
+      "url": ""
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "CadastroRequest": {
+        "type": "object",
+        "properties": {
+          "nome": {"type": "string"},
+          "email": {"type": "string", "format": "email"},
+          "senha": {"type": "string", "format": "password"}
+        },
+        "required": ["nome", "email", "senha"]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {"type": "string", "format": "email"},
+          "senha": {"type": "string", "format": "password"}
+        },
+        "required": ["email", "senha"]
+      },
+      "LembreteRequest": {
+        "type": "object",
+        "properties": {
+          "titulo": {"type": "string"},
+          "descricao": {"type": "string"},
+          "user": {"type": "string"},
+          "status": {"type": "string"}
+        },
+        "required": ["titulo", "descricao", "user", "status"]
+      },
+      "LembreteResponse": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "titulo": {"type": "string"},
+          "descricao": {"type": "string"},
+          "user": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {"type": "string"}
+        }
+      }
+    }
+  },
+  "paths": {
+    "/cadastro": {
+      "post": {
+        "summary": "Criar novo usuário",
+        "description": "Registra um novo usuário para acesso à API.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/CadastroRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Usuário criado com sucesso"},
+          "400": {
+            "description": "Dados incompletos",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Autenticar usuário",
+        "description": "Gera token JWT para o usuário autenticado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/LoginRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Login bem sucedido"},
+          "400": {
+            "description": "Dados incompletos",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    
+    "/lembrete": {
+      "post": {
+        "summary": "Criar lembrete",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/LembreteRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Lembrete criado"},
+          "400": {
+            "description": "Dados incompletos",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          },
+          "401": {
+            "description": "Usuário não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar lembretes",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Lista de lembretes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {"$ref": "#/components/schemas/LembreteResponse"}
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Usuário não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lembrete_id/{id_lembrete}": {
+      "get": {
+        "summary": "Buscar lembrete por ID",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id_lembrete",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lembrete encontrado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/LembreteResponse"}
+              }
+            }
+          },
+          "401": {
+            "description": "Usuário não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deleta_id/{id_lembrete}": {
+      "delete": {
+        "summary": "Excluir lembrete",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id_lembrete",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "responses": {
+          "200": {"description": "Lembrete excluído"},
+          "401": {
+            "description": "Usuário não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/atualiza_id/{id_lembrete}": {
+      "put": {
+        "summary": "Atualizar lembrete",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id_lembrete",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": {"type": "string"},
+                  "descricao": {"type": "string"},
+                  "status": {"type": "string"}
+                },
+                "required": ["titulo", "descricao", "status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Lembrete atualizado"},
+          "400": {
+            "description": "Dados incompletos",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          },
+          "401": {
+            "description": "Usuário não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

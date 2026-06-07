@@ -28,7 +28,7 @@ def logar(email, senha):
         try:
             user = session.query(User).filter_by(email=email).first()
             if not user:
-                return jsonify({"error": "Credenciais inválidas."}), 401
+                return jsonify({"error": "Credenciais  inválidas."}), 401
 
             password_matches = checkpw(senha.encode('utf-8'), user.senha.encode('utf-8'))
             if not password_matches:

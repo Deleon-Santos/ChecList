@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist API Documentation</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #header {
+            padding: 18px 24px;
+            background-color: #1f2937;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        #header p {
+            margin: 0;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        #swagger-ui {
+            margin: 0;
+        }
+        .topbar-wrapper img {
+            content: url("https://raw.githubusercontent.com/swagger-api/swagger-ui/main/src/style/favicon-32x32.png");
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div>
+            <h1>Checklist API</h1>
+            <p>Documentação interativa disponível em OpenAPI / Swagger.</p>
+        </div>
+    </div>
+    <div id="swagger-ui"></div>
+
+    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+    <script>
+        window.onload = function() {
+            SwaggerUIBundle({
+                url: "{{ url_for('main.openapi') }}",
+                dom_id: '#swagger-ui',
+                presets: [SwaggerUIBundle.presets.apis],
+                layout: 'BaseLayout',
+                deepLinking: true,
+                docExpansion: 'none',
+                defaultModelsExpandDepth: -1
+            });
+        };
+    </script>
+</body>
+</html>

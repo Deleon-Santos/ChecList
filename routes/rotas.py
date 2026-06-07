@@ -1,12 +1,17 @@
 
-from flask import  Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, send_from_directory
 from flask_jwt_extended import get_jwt_identity,jwt_required
 from controllers.controller import add_lemmbrete, atualizar_lembrete_id, deletar_lembrete_id, logar, novo_user, pegar_lembrete_id, pegar_lembretes
 from model.models import User, Lembrete
 
 main = Blueprint('main', __name__)
 
-@main.route("/index")
+@main.route("/api")
+def openapi():
+    return send_from_directory("static", "openapi.json")
+
+@main.route("/")
+
 def index():
     return render_template("index.html")
 
