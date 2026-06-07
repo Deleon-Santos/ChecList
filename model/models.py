@@ -18,7 +18,7 @@ class Lembrete(Base):
     titulo = Column(String, nullable=False)
     descricao = Column(String, nullable=False)
     data_hora = Column(DateTime(timezone=True),server_default=func.now())
-    status = Column(String, default="pendente")
+    status = Column(String, default="ativo")
     user=Column(Integer, ForeignKey("users.id_user"))
     
     user_rel = relationship("User", backref="lembretes")

@@ -1,5 +1,5 @@
 
-from flask import  Blueprint, request, jsonify
+from flask import  Blueprint, request, jsonify, render_template
 from flask_jwt_extended import get_jwt_identity,jwt_required
 from controllers.controller import add_lemmbrete, atualizar_lembrete_id, deletar_lembrete_id, logar, novo_user, pegar_lembrete_id, pegar_lembretes
 from model.models import User, Lembrete
@@ -8,7 +8,7 @@ main = Blueprint('main', __name__)
 
 @main.route("/index")
 def index():
-    return "Hello, World!"
+    return render_template("index.html")
 
 
 @main.route("/cadastro", methods=["POST"])
@@ -18,6 +18,7 @@ def cadastro():
         
         return novo_user(user.get("nome"), user.get("email"), user.get("senha"))
     return jsonify({"error": "Dados incompletos"}), 400
+
 
 @main.route("/login", methods=["POST"])
 def login():
