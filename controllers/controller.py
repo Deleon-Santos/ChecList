@@ -34,7 +34,7 @@ def logar(email, senha):
             if not password_matches:
                 return jsonify({"error": "Credenciais inválidas."}), 401
 
-            token = create_access_token(identity=user.id_user)
+            token = create_access_token(identity=str(user.id_user))
             return jsonify({
                 "status": "ok",
                 "user_id": user.id_user,
