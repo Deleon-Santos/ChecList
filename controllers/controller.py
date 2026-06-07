@@ -38,7 +38,7 @@ def logar(email, senha):
             return jsonify({
                 "status": "ok",
                 "user_id": user.id_user,
-                "access_token": "Bearer " + token,
+                "access_token": token,
                 "token_type": "Bearer"
             }), 200
         

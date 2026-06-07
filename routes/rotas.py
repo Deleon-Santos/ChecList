@@ -16,7 +16,7 @@ def cadastro():
     user = request.get_json() or {}
     if user.get("email") and user.get("senha"):
         
-        return novo_user(user.get("email"), user.get("senha"))
+        return novo_user(user.get("nome"), user.get("email"), user.get("senha"))
     return jsonify({"error": "Dados incompletos"}), 400
 
 @main.route("/login", methods=["POST"])
