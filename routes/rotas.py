@@ -1,7 +1,6 @@
-
 from flask import Blueprint, request, jsonify, render_template, send_from_directory
 from flask_jwt_extended import get_jwt_identity,jwt_required
-from controllers.controller import add_lemmbrete, atualizar_lembrete_id, deletar_lembrete_id, logar, novo_user, pegar_lembrete_id, pegar_lembretes
+from controllers.controller import add_lembrete, atualizar_lembrete_id, deletar_lembrete_id, logar, novo_user, pegar_lembrete_id, pegar_lembretes
 from model.models import User, Lembrete
 
 main = Blueprint('main', __name__)
@@ -10,8 +9,8 @@ main = Blueprint('main', __name__)
 def openapi():
     return send_from_directory("static", "openapi.json")
 
-@main.route("/")
 
+@main.route("/")
 def index():
     return render_template("index.html")
 
@@ -19,7 +18,7 @@ def index():
 @main.route("/cadastro", methods=["POST"])
 def cadastro():
     user = request.get_json() or {}
-    if user.get("email") and user.get("senha"):
+    if user.get("email") and user.get("senha") and user.get("nome"):
         
         return novo_user(user.get("nome"), user.get("email"), user.get("senha"))
     return jsonify({"error": "Dados incompletos"}), 400
@@ -42,8 +41,8 @@ def criar_lembrete():
         return jsonify({"error": "Usuário não autenticado."}), 401
     lembrete = request.get_json() or {}
     
-    if lembrete.get("titulo") and lembrete.get("descricao") and lembrete.get("user") and lembrete.get("status"): 
-        return add_lemmbrete(lembrete.get("titulo"), lembrete.get("descricao"),lembrete.get("user"),lembrete.get("status"))
+    if lembrete.get("titulo") and lembrete.get("descricao") and lembrete.get("user") and lembrete.get("status") and lembrete.get("area") and lembrete.get("prioridade"): 
+        return add_lembrete(lembrete.get("titulo"), lembrete.get("descricao"),lembrete.get("user"),lembrete.get("status"),lembrete.get("area"),lembrete.get("prioridade"))
     return jsonify({"error": "Dados incompletos"}), 400
 
 
@@ -71,10 +70,11 @@ def lembrete_id(id_lembrete):
 @jwt_required()
 def deletar_lembrete(id_lembrete):
     user = get_jwt_identity()
+    status = request.get_json() or ("excluído",)
     if not user:
         return jsonify({"error": "Usuário não autenticado."}), 401
     if id_lembrete:
-        return deletar_lembrete_id(id_lembrete)
+        return deletar_lembrete_id(id_lembrete, status[0])
     return jsonify({"error": "ID do lembrete é necessário"}), 400
 
 

@@ -1,9 +1,7 @@
-
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from config import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -18,8 +16,10 @@ class Lembrete(Base):
     titulo = Column(String, nullable=False)
     descricao = Column(String, nullable=False)
     data_hora = Column(DateTime(timezone=True),server_default=func.now())
-    status = Column(String, default="ativo")
+    status = Column(String)
     user=Column(Integer, ForeignKey("users.id_user"))
+    area = Column(String)
+    prioridade = Column(String)
     
     user_rel = relationship("User", backref="lembretes")
 

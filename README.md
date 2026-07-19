@@ -1,6 +1,6 @@
 # ChecList
 
-Uma aplicação Flask para gerenciamento de lembretes com autenticação JWT e documentação Swagger.
+API construda com Flask para gerenciamento de lembretes(CRUD) com autenticação JWT, Bcrypt, Docker e documentação Swagger.
 
 ## 🚀 Tecnologias Utilizadas
 

@@ -11,15 +11,12 @@ import os
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./checklist.db"
 
-# Disable SQLAlchemy echo to avoid logging SQL statements/parameters
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=False)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 jwt = JWTManager()
 
-# Application logger (writes to a rotating file). Use logger.exception() in code
-# to record full tracebacks to logs while returning generic messages to clients.
 logger = logging.getLogger("checList")
 
 def setup_logging(app, log_file_path=None):
@@ -37,7 +34,6 @@ def setup_logging(app, log_file_path=None):
     if not logger.handlers:
         logger.addHandler(handler)
 
-    # Avoid propagating internal exceptions to the client
     app.config['PROPAGATE_EXCEPTIONS'] = False
 
 def jwt_config(app):

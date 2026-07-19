@@ -6,7 +6,6 @@ from config import Base, engine, jwt_config, setup_logging
 from model.models import User, Lembrete
 
 
-
 app = Flask(__name__)
 setup_logging(app)
 Base.metadata.create_all(bind=engine)

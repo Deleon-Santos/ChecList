@@ -47,15 +47,16 @@ def logar(email, senha):
             return jsonify({"error": "Erro interno do servidor."}), 500
 
 
-def add_lemmbrete(titulo, descricao, user, status):
+def add_lembrete(titulo, descricao, user, status, area, prioridade):
     with Session() as session:
         try:
             new_lembrete = Lembrete(
                 titulo=titulo,
-                descricao=descricao,
-                
+                descricao=descricao, 
                 status=status,
-                user=user
+                user=user,
+                area=area,
+                prioridade=prioridade
             )
             session.add(new_lembrete)
             session.commit()
@@ -66,16 +67,17 @@ def add_lemmbrete(titulo, descricao, user, status):
             logger.exception("Erro ao criar lembrete")
             return jsonify({"error": "Erro interno do servidor."}), 500
 
+
 def pegar_lembretes():
     with Session() as session:
         try: 
-            lembretes_ativos = session.query(Lembrete).filter_by(status="ativo").all()
+            lembretes_ativos = session.query(Lembrete).all()
             if not lembretes_ativos:
                 return jsonify({"message": "Nenhum lembrete encontrado."}), 404
             
             return jsonify([{
                                 "id": lembretes_ativos.id_lembrete,
-                                "tiprint(lembretes_ativos)tulo": lembretes_ativos.titulo,
+                                "titulo": lembretes_ativos.titulo,
                                 "descricao": lembretes_ativos.descricao,
                                 "data_hora": lembretes_ativos.data_hora,
                                 "status": lembretes_ativos.status,
@@ -86,28 +88,6 @@ def pegar_lembretes():
             session.rollback()
             logger.exception("Erro ao pegar lembretes")
             return jsonify({"error": "Erro interno do servidor."}), 500
-
-
-def pegar_lembrete_id(id_lembrete):
-    with Session() as session:
-        try: 
-            lembrete = session.query(Lembrete).filter_by(id_lembrete=id_lembrete).first()
-            if not lembrete:
-                return jsonify({"message": "Lembrete não encontrado."}), 404
-            
-            return jsonify({
-                                "id": lembrete.id_lembrete,
-                                "titulo": lembrete.titulo,
-                                "descricao": lembrete.descricao,
-                                "data_hora": lembrete.data_hora,
-                                "status": lembrete.status,
-                                "user": lembrete.user
-                             }), 200
-        
-        except Exception:
-            session.rollback()
-            logger.exception("Erro ao pegar lembrete por ID")
-            return jsonify({"error": "Erro interno do servidor."}), 500
         
 
 def pegar_lembrete_id(id_lembrete):
@@ -132,14 +112,14 @@ def pegar_lembrete_id(id_lembrete):
             return jsonify({"error": "Erro interno do servidor."}), 500
 
 
-def deletar_lembrete_id(id_lembrete):
+def deletar_lembrete_id(id_lembrete,status):
     with Session() as session:
         try: 
             lembrete = session.query(Lembrete).filter_by(id_lembrete=id_lembrete).first()
             if not lembrete:
                 return jsonify({"message": "Lembrete não encontrado."}), 404
             
-            session.delete(lembrete)
+            lembrete.status = status
             session.commit()
             return jsonify({"message": "Lembrete deletado com sucesso!"}), 200
         
