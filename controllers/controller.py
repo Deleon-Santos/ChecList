@@ -81,7 +81,9 @@ def pegar_lembretes():
                                 "descricao": lembretes_ativos.descricao,
                                 "data_hora": lembretes_ativos.data_hora,
                                 "status": lembretes_ativos.status,
-                                "user": lembretes_ativos.user
+                                "user": lembretes_ativos.user,
+                                "prioridade": lembretes_ativos.prioridade,
+                                "area": lembretes_ativos.area
                              } for lembretes_ativos in lembretes_ativos]), 200
         
         except Exception:
@@ -103,7 +105,9 @@ def pegar_lembrete_id(id_lembrete):
                                 "descricao": lembrete.descricao,
                                 "data_hora": lembrete.data_hora,
                                 "status": lembrete.status,
-                                "user": lembrete.user
+                                "user": lembrete.user,
+                                "prioridade": lembrete.prioridade,
+                                "area": lembrete.area
                              }), 200
         
         except Exception:
