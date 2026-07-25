@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token
 from bcrypt import checkpw, hashpw, gensalt
 from config import Session, logger
 from model.models import Lembrete, User
-from util import enviar, postar
+from util import enviar
 
 
 def novo_user(nome, email, senha):
@@ -61,7 +61,8 @@ def add_lembrete(titulo, descricao, user, status, area, prioridade):
             )
             session.add(new_lembrete)
             session.commit()
-            print(postar(user,titulo,descricao,area,prioridade))
+
+            enviar.notificar(user,titulo,descricao,area,prioridade,status)
             return jsonify({"message": "Lembrete criado com sucesso!"}), 201
         
         except Exception:
