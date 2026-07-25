@@ -2,15 +2,10 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
+import traceback
 import os
 
 load_dotenv()
-
-print(os.getenv("EMAIL"))
-print(os.getenv("SMTP_SERVER"))
-print(os.getenv("SMTP_PORT"))
-print(os.getenv("USER_MAIL"))
-
 class Notificacao:
     SMTP_SERVER = os.getenv("SMTP_SERVER")
     SMTP_PORT = int(os.getenv("SMTP_PORT"))
@@ -19,11 +14,14 @@ class Notificacao:
     USER_MAIL = os.getenv("USER_MAIL")
 
     def envia_notificacao(self, user, titulo, descricao, area, prioridade, status):
+        user_name= user.split("@")[0] if user else "Novo Usuário" 
+        destinatarios = [self.USER_MAIL, user]
+
         try:   
-            print("Enviando e-mail...")  
             assunto = f"[{prioridade}] {titulo}"
             corpo = f"""
-                            Olá, {user}!
+                            Olá, {user_name}!
+
                             Você recebeu uma nova notificação de ocorrência.
                             Título: {titulo}
                             Descrição: {descricao}
@@ -36,18 +34,26 @@ class Notificacao:
                             Atenciosamente,
                             Equipe de desenvolvimento.
                             """
-            print("corpo")
+            
+            destinatarios = [self.USER_MAIL, user]
+
             mensagem = MIMEMultipart()
             mensagem["From"] = self.EMAIL
-            mensagem["To"] = self.USER_MAIL
+            mensagem["To"] = ", ".join(destinatarios)
             mensagem["Subject"] = assunto
             mensagem.attach(MIMEText(corpo, "plain"))
 
-            servidor = smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT)
-            servidor.starttls()
-            servidor.login(self.EMAIL, self.SENHA)
-            servidor.send_message(mensagem)
-            servidor.quit()
+            with smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT, timeout=20) as servidor:
+                servidor.ehlo()
+                servidor.starttls()
+                servidor.ehlo()
+                servidor.login(self.EMAIL, self.SENHA)
+                servidor.sendmail(
+                    self.EMAIL,
+                    destinatarios,
+                    mensagem.as_string()
+                )
+            
 
             return {
                 "status": True,
@@ -55,7 +61,8 @@ class Notificacao:
             }
 
         except Exception as e:
-            
-            print(type(e))
-            print(e)
-
+            traceback.print_exc()
+            return {
+                "status": False,
+                "message": str(e)
+            }

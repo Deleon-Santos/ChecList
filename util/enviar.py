@@ -1,9 +1,8 @@
-
 from util.postar import Notificacao
 
 def notificar(user, titulo, descricao, area, prioridade, status):
     notificacao = Notificacao()
-    resultado = notificacao.envia_notificacao(
+    notificacao.envia_notificacao(
         user=user,
         titulo=titulo,
         descricao=descricao,
@@ -11,4 +10,4 @@ def notificar(user, titulo, descricao, area, prioridade, status):
         prioridade=prioridade,
         status=status
     )
-    return resultado
+    return 
