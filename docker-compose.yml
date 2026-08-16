@@ -1,6 +1,6 @@
 services:
   web:
-    build: .
+    
     image: deleonsantos/checlist-web:latest
     command: python run.py
     volumes:
