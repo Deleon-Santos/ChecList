@@ -1,7 +1,7 @@
-version: "3.9"
 services:
   web:
     build: .
+    image: deleonsantos/checlist-web:latest
     command: python run.py
     volumes:
       - .:/app
