@@ -10,6 +10,8 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     senha = Column(String, nullable=False)
     
+    lembretes = relationship("Lembrete",back_populates="usuario")
+    
 class Lembrete(Base):
     __tablename__ = "lembretes"
     id_lembrete = Column(Integer, primary_key=True, autoincrement=True)
@@ -17,9 +19,21 @@ class Lembrete(Base):
     descricao = Column(String, nullable=False)
     data_hora = Column(DateTime(timezone=True),server_default=func.now())
     status = Column(String)
-    user=Column(Integer, ForeignKey("users.id_user"))
+    user = Column(String, nullable=False)
     area = Column(String)
     prioridade = Column(String)
     
-    user_rel = relationship("User", backref="lembretes")
+    # FK para users.id_user
+    user_rel = Column(
+        Integer,
+        ForeignKey("users.id_user"),
+        nullable=False
+    )
+    
+    # Relacionamento com User
+    usuario = relationship(
+        "User",
+        back_populates="lembretes"
+    )
+    
 

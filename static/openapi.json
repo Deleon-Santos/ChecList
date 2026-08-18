@@ -41,12 +41,12 @@
         "properties": {
           "titulo": {"type": "string"},
           "descricao": {"type": "string"},
-          "user": {"type": "string"},
+          
           "status": {"type": "string"},
           "area": {"type": "string"},
           "prioridade": {"type": "string"}
         },
-        "required": ["titulo", "descricao", "user", "status", "area", "prioridade"]
+        "required": ["titulo", "descricao", "status", "area", "prioridade"]
       },
       "LembreteResponse": {
         "type": "object",

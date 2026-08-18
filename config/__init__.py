@@ -70,12 +70,13 @@ def setup_logging(app, log_file_path=None):
 
 def jwt_config(app):
 
-    app.config["SECRET_KEY"] = os.getenv(
-        "SECRET_KEY"
-    )
+    app.config["JWT_SECRET_KEY"] = "your_secret_key"
 
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600
     app.config["JWT_HEADER_NAME"] = "Authorization"
+    app.config["JWT_HEADER_TYPE"] = "Bearer"
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
+
+    
     jwt.init_app(app)
