@@ -1,6 +1,6 @@
 services:
   web:
-    
+    build: . #mantenha esta linha apenas para subir o repositorio local
     image: deleonsantos/checlist-web:latest
     command: python run.py
     volumes:

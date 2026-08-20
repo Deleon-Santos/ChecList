@@ -75,7 +75,7 @@ def add_lembrete(titulo, descricao, usuario, status, area, prioridade):
         except Exception:
             session.rollback()
             logger.exception("Erro ao criar lembrete")
-            return jsonify({"error": "Erro interno do servidor."}), 500
+            return jsonify({"error": "Erro interno do servidor ou bd."}), 500
 
 
 def pegar_lembretes():

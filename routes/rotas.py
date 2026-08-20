@@ -36,7 +36,7 @@ def login():
 @main.route("/lembrete", methods=["POST"])
 @jwt_required()
 def criar_lembrete():
-    usuario = get_jwt_identity()
+    usuario = int(get_jwt_identity())
     print(f"Usuário autenticado: {usuario}")
     if not usuario:
         return jsonify({"error": "Usuário não autenticado."}), 401
@@ -51,7 +51,7 @@ def criar_lembrete():
 @main.route("/lembrete", methods=["GET"])
 @jwt_required()
 def lembretes():
-    usuario = get_jwt_identity()
+    usuario = int(get_jwt_identity())
     if not usuario:
         return jsonify({"error": "Usuário não autenticado."}), 401
     return pegar_lembretes()
@@ -60,7 +60,7 @@ def lembretes():
 @main.route("/lembrete_id/<int:id_lembrete>", methods=["GET"])
 @jwt_required()
 def lembrete_id(id_lembrete):
-    usuario = get_jwt_identity()
+    usuario = int(get_jwt_identity())
     if not usuario:
         return jsonify({"error": "Usuário não autenticado."}), 401
     if id_lembrete:
@@ -71,7 +71,7 @@ def lembrete_id(id_lembrete):
 @main.route("/deleta_id/<int:id_lembrete>", methods=["DELETE"])
 @jwt_required()
 def deletar_lembrete(id_lembrete):
-    usuario = get_jwt_identity()
+    usuario = int(get_jwt_identity())
     status = request.get_json() or ("excluído",)
     if not usuario:
         return jsonify({"error": "Usuário não autenticado."}), 401
@@ -83,9 +83,10 @@ def deletar_lembrete(id_lembrete):
 @main.route("/atualiza_id/<int:id_lembrete>", methods=["PUT"])
 @jwt_required()
 def atualiza_lembrete(id_lembrete):
-    usuario = get_jwt_identity()
+    usuario = int(get_jwt_identity())
     if not usuario:
         return jsonify({"error": "Usuário não autenticado."}), 401
+    
     lembrete = request.get_json() or {}
     if id_lembrete and lembrete.get("titulo") and lembrete.get("descricao") and lembrete.get("status"):
         return atualizar_lembrete_id(id_lembrete, lembrete.get("titulo"), lembrete.get("descricao"), lembrete.get("status"))
