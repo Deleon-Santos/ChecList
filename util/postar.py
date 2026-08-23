@@ -13,9 +13,9 @@ class Notificacao:
     SENHA = os.getenv("EMAIL_PASSWORD")
     USER_MAIL = os.getenv("USER_MAIL")
 
-    def envia_notificacao(self, user, titulo, descricao, area, prioridade, status):
-        user_name= user.split("@")[0] if user else "Novo Usuário" 
-        destinatarios = [self.USER_MAIL, user]
+    def envia_notificacao(self, usuario_email, titulo, descricao, area, prioridade, status):
+        user_name= usuario_email.split("@")[0] if usuario_email else "Novo Usuário" 
+        destinatarios = [self.USER_MAIL, usuario_email]
 
         try:   
             assunto = f"[{prioridade}] {titulo}"
@@ -35,7 +35,7 @@ class Notificacao:
                             Equipe de desenvolvimento.
                             """
             
-            destinatarios = [self.USER_MAIL, user]
+            destinatarios = [self.USER_MAIL, usuario_email]
 
             mensagem = MIMEMultipart()
             mensagem["From"] = self.EMAIL

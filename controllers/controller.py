@@ -54,14 +54,15 @@ def add_lembrete(titulo, descricao, usuario, status, area, prioridade):
         user = session.query(User).filter_by(id_user=usuario).first()
         if not user:
             return jsonify({"error": "Usuário não encontrado."}), 404
-        usuario = user.nome      
+        usuario_nome = user.nome 
+        usuario_email = user.email     
         try:
 	        
             new_lembrete = Lembrete(
                 titulo=titulo,
                 descricao=descricao,        
                 status=status,
-                user =usuario,
+                user =usuario_nome,
                 area=area,
                 prioridade=prioridade,
                 user_rel= user.id_user
@@ -69,7 +70,7 @@ def add_lembrete(titulo, descricao, usuario, status, area, prioridade):
             session.add(new_lembrete)
             session.commit()
 
-            enviar.notificar(user.email,titulo,descricao,area,prioridade,status)
+            enviar.notificar(usuario_email,titulo,descricao,area,prioridade,status)
             return jsonify({"message": "Lembrete criado com sucesso!"}), 201
         
         except Exception:
