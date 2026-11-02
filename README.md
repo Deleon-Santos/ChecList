@@ -1,7 +1,7 @@
 # ChecList
 
 API construda com Flask para gerenciamento de lembretes(CRUD) com autenticação JWT, Bcrypt, Docker e documentação Swagger.
-[Deploy Aqui!](https://library-backend-1-0zpr.onrender.com/apidocs/)
+[Deploy Aqui!](https://checlist-web-latest.onrender.com/)
 
 ## 🚀 Tecnologias Utilizadas
 
