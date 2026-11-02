@@ -36,6 +36,7 @@ def logar(email, senha):
                 return jsonify({"error": "Credenciais inválidas."}), 401
 
             token = create_access_token(identity=str(user.id_user))
+            print(f"Usuário logado: {user.id_user}, Token: {token}")
             return jsonify({
                 "status": "ok",
                 "user_id": user.id_user,
@@ -48,27 +49,34 @@ def logar(email, senha):
             return jsonify({"error": "Erro interno do servidor."}), 500
 
 
-def add_lembrete(titulo, descricao, user, status, area, prioridade):
+def add_lembrete(titulo, descricao, usuario, status, area, prioridade):
     with Session() as session:
+        user = session.query(User).filter_by(id_user=usuario).first()
+        if not user:
+            return jsonify({"error": "Usuário não encontrado."}), 404
+        usuario_nome = user.nome 
+        usuario_email = user.email     
         try:
+	        
             new_lembrete = Lembrete(
                 titulo=titulo,
-                descricao=descricao, 
+                descricao=descricao,        
                 status=status,
-                user=user,
+                user =usuario_nome,
                 area=area,
-                prioridade=prioridade
+                prioridade=prioridade,
+                user_rel= user.id_user
             )
             session.add(new_lembrete)
             session.commit()
 
-            # enviar.notificar(user,titulo,descricao,area,prioridade,status)
+            enviar.notificar(usuario_email,titulo,descricao,area,prioridade,status)
             return jsonify({"message": "Lembrete criado com sucesso!"}), 201
         
         except Exception:
             session.rollback()
             logger.exception("Erro ao criar lembrete")
-            return jsonify({"error": "Erro interno do servidor."}), 500
+            return jsonify({"error": "Erro interno do servidor ou bd."}), 500
 
 
 def pegar_lembretes():

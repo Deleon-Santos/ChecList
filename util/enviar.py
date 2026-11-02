@@ -1,13 +1,6 @@
 from util.postar import Notificacao
 
-def notificar(user, titulo, descricao, area, prioridade, status):
+def notificar(usuario_email, titulo, descricao, area, prioridade, status):
     notificacao = Notificacao()
-    notificacao.envia_notificacao(
-        user=user,
-        titulo=titulo,
-        descricao=descricao,
-        area=area,
-        prioridade=prioridade,
-        status=status
-    )
+    notificacao.envia_notificacao(usuario_email, titulo, descricao, area, prioridade, status)
     return 

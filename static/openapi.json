@@ -6,9 +6,16 @@
     "description": "Documentação da API Checklist com autenticação JWT e endpoints para usuários e lembretes."
   },
   "servers": [
+    
     {
-      "url": ""
+      "url": "https://checlist-web-latest.onrender.com",
+      "description": "Servidor de Produção (Render)"
+    },
+    {
+      "url": "http://localhost:5000",
+      "description": "Servidor de Desenvolvimento Local"
     }
+  
   ],
   "components": {
     "securitySchemes": {
@@ -41,12 +48,12 @@
         "properties": {
           "titulo": {"type": "string"},
           "descricao": {"type": "string"},
-          "user": {"type": "string"},
+          
           "status": {"type": "string"},
           "area": {"type": "string"},
           "prioridade": {"type": "string"}
         },
-        "required": ["titulo", "descricao", "user", "status", "area", "prioridade"]
+        "required": ["titulo", "descricao", "status", "area", "prioridade"]
       },
       "LembreteResponse": {
         "type": "object",
@@ -82,7 +89,7 @@
           }
         },
         "responses": {
-          "200": {"description": "Usuário criado com sucesso"},
+          "201": {"description": "Usuário criado com sucesso"},
           "400": {
             "description": "Dados incompletos",
             "content": {
@@ -139,7 +146,7 @@
           }
         },
         "responses": {
-          "200": {"description": "Lembrete criado"},
+          "201": {"description": "Lembrete criado"},
           "400": {
             "description": "Dados incompletos",
             "content": {

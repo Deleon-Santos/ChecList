@@ -3,4 +3,5 @@ SQLAlchemy
 flask-jwt-extended
 flask-cors
 passlib[bcrypt]
-dotenv
+python-dotenv
+psycopg2-binary
